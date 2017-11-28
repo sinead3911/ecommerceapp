@@ -1,32 +1,32 @@
 {% extends "base.html" %}
-
 {% block content %}
-
-<h1>Product List</h1>
-
-{% for product in products %}
-
-        <div class="row">
-            <hr>
-            <div class="col-md-2 col-sm-3 text-center">
-                <a class="story-img" href="#">
-                    <img src="{{ MEDIA_URL }}{{ product.image }}" style="width:100px; height: 100px;">
-                </a>
-
-            </div>
-            <div class="col-md-10 col-sm-9">
-                <h3>{{ product.name }}</h3>
-                <div class="row">
-                    <div class="col-xs-9">
-                        <p>{{ product.description|truncatewords:30 }}</p>
-
-                        <!--<p><button class="btn btn-default" onclick="location.href='#'">Read More</button></p>-->
-                        <p>{{ product.price }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-{% endfor %}
-
+   <table class="table">
+       <thead>
+       <tr>
+           <th>Image</th>
+           <th>Name</th>
+           <th>Description</th>
+           <th>Price</th>
+           <th>Cart</th>
+       </tr>
+       </thead>
+       <tbody>
+       {% for product in products %}
+           <tr>
+               <td><img height="100" width="100" src="{{ MEDIA_URL }}{{ product.image }}"></td>
+               <td>{{ product.name }}</td>
+               <td>{{ product.description }}</td>
+               <td>{{ product.price }}</td>
+               <td>
+                   <form method="post" action="{% url 'add_to_cart' product.id %}">
+                       {% csrf_token %}
+                       Quantity
+                       <input name='quantity' type="number" min="1" max="999">
+                       <button type="submit">Add</button>
+                   </form>
+               </td>
+           </tr>
+       {% endfor %}
+       </tbody>
+   </table>
 {% endblock %}

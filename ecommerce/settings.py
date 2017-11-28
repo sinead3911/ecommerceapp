@@ -25,8 +25,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'ecommerceapp-sinead391.c9users.io']
+ALLOWED_HOSTS = [os.environ.get('C9_HOSTNAME')]
 
+#[ 'ecommerceapp-sinead391.c9users.io']
 
 # Application definition
 
@@ -40,6 +41,9 @@ INSTALLED_APPS = [
     'django_forms_bootstrap',
     'accounts',
     'products', 
+    'cart',
+    'checkout',
+    'storages',
     
 ]
 
@@ -67,6 +71,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'cart.contexts.cart_contents'
             ],
         },
     },
@@ -118,7 +123,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
 
+AWS_S3_OBJECT_PARAMETERS = {  
+    'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+    'CacheControl': 'max-age=94608000',
+}
+
+
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+STATICFILES_LOCATION = "static"
+STATICFILES_STORAGE = "custom_storages.StaticStorage"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+MEDIAFILES_LOCATION = 'media'
+DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
@@ -128,5 +159,6 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 #     'accounts.backends.EmailAuth',
 # ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+
+STRIPE_PUBLISHABLE= os.getenv('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET= os.getenv('STRIPE_SECRET_KEY')

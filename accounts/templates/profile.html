@@ -4,6 +4,8 @@
 {% block content %}
     <!--<img src="{{ MEDIA_URL }}{{ request.user.profile.image }}" style="width:150px; height: 150px; background-color: #12ABB2; color: #ffffff;" class="img-circle">-->
     <h2>Success!</h2>
-    <p>You are logged in as {{ user.email }} </p>            
+    <p>You are logged in as {{ user.email }} </p>       
+    
+    <p><a href="{% url 'password_reset' %}">Forgot my password</a></p>
         
 {% endblock %}
